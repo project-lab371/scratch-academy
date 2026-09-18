@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scratch Academy</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#17202a}
+header{background:#fff;border-bottom:1px solid #ddd;padding:14px 20px;display:flex;gap:15px;align-items:center;position:sticky;top:0;z-index:5}
+.logo{font-size:24px;font-weight:900;color:#20a84b}.search{flex:1;max-width:550px;margin:auto}.search input{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:15px}
+button{border:0;border-radius:10px;padding:10px 14px;font-weight:bold;cursor:pointer}.dark{background:#17202a;color:white}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 65px)}
+aside{background:#fff;border-right:1px solid #ddd;padding:18px;position:sticky;top:65px;height:calc(100vh - 65px)}
+.nav{display:block;width:100%;text-align:left;background:transparent;margin:5px 0}.nav:hover,.nav.active{background:#e7f7ed;color:#16863b}
+main{max-width:1100px;width:100%;margin:auto;padding:25px}.hero{background:linear-gradient(135deg,#20a84b,#087b39);color:#fff;padding:28px;border-radius:22px}
+.hero h1{font-size:38px;margin:0 0 10px}.bar{height:12px;background:#ffffff44;border-radius:20px}.bar i{display:block;height:100%;width:0;background:#ffd84d;border-radius:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:15px;margin-top:20px}.card{background:#fff;border:1px solid #ddd;border-radius:17px;padding:18px;cursor:pointer}
+.tag{display:inline-block;padding:5px 9px;border-radius:20px;background:#eef5ff;color:#2866c7;font-size:12px;font-weight:bold}.emoji{font-size:30px;margin-top:8px}
+.lesson{display:none}.lesson.show{display:block}.back{background:#ddd}.block{font-family:monospace;color:#fff;padding:10px 13px;border-radius:7px;margin:8px 0;width:max-content;max-width:100%;font-weight:bold}
+.event{background:#e6a900}.motion{background:#4c97ff}.looks{background:#9966ff}.control{background:#ffab19}.sense{background:#5cb1d6}.var{background:#ff8c1a}
+.challenge{margin-top:20px;padding:20px;border:3px dashed #20a84b;background:#f2fff6;border-radius:16px;text-align:center}
+.dropzone{padding:35px 20px;border:3px dashed #20a84b;border-radius:14px;background:#fff;cursor:pointer;transition:.2s}
+.dropzone:hover,.dropzone.drag{background:#dff8e8;transform:scale(1.01)}
+.previewImg{max-width:100%;max-height:420px;border-radius:12px;margin-top:14px;border:1px solid #ddd}
+.aiBox{margin-top:14px;padding:14px;text-align:left;background:#eef8ff;border-radius:12px}.complete{background:#20a84b;color:white;margin-top:15px}
+.complete:disabled{background:#9aa4ad;cursor:not-allowed}.ok{color:#16863b;font-weight:bold}.warn{color:#a56a00;font-weight:bold}
+body.dark{background:#11151b;color:#f4f7fb}body.dark header,body.dark aside,body.dark .card{background:#1b222b;color:#f4f7fb;border-color:#303a46}
+body.dark .challenge{background:#13271a}.small{color:#687383;font-size:13px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}aside{position:static;height:auto;border-right:0;border-bottom:1px solid #ddd}header{flex-wrap:wrap}.search{order:3;flex-basis:100%}.hero h1{font-size:28px}}
+.show{display:block !important}
+
+/* Fixed Scratch-style block display */
+.block-guide{margin-top:16px}
+.block-guide-card{border:1px solid rgba(76,159,112,.30);border-radius:14px;padding:16px;background:rgba(255,255,255,.82)}
+.dark .block-guide-card{background:rgba(255,255,255,.06)}
+.block-guide-title{font-weight:900;font-size:18px;margin-bottom:12px}
+.block-guide-row{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin:12px 0}
+.guide-block{
+  display:block;
+  width:max-content;
+  max-width:100%;
+  padding:10px 16px;
+  border-radius:8px;
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+  line-height:1.25;
+  box-shadow:0 3px 0 rgba(0,0,0,.18);
+  border:1px solid rgba(0,0,0,.12);
+}
+.guide-event{background:#e6a51b}
+.guide-motion{background:#4c97d1}
+.guide-looks{background:#8b5bd6}
+.guide-sound{background:#c94fc8}
+.guide-control{background:#e6a229}
+.guide-sensing{background:#45b89c}
+.guide-variable{background:#ef8b32}
+.guide-other{background:#777}
+.guide-arrow{font-size:18px;font-weight:900;margin-left:14px;line-height:1}
+.guide-explain{line-height:1.55;margin-top:12px}
+.guide-check{font-weight:800;margin-top:9px}
+
+
+.brand-icon{width:28px;height:28px;display:inline-block;vertical-align:middle;color:var(--green,#2f8f4e);flex:none}
+</style>
+<style>
+.real-lesson,.blocks-section,.challenge,.checkpoint{margin:22px 0;padding:24px;border:1px solid var(--line,#ddd);border-radius:18px;background:rgba(255,255,255,.72)}
+.real-lesson h2,.blocks-section h2,.challenge h2,.checkpoint h2{margin-top:0}
+.lesson-content h3{margin:20px 0 8px}.lesson-content p,.lesson-content li{line-height:1.65}
+.lesson-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.lead{font-size:1.08rem;line-height:1.6}
+.block-code{background:#20242d;color:#fff;padding:16px;border-radius:14px;font-family:ui-monospace,monospace}
+.fake-block{padding:9px 12px;margin:6px 0;border-radius:9px;background:#343b4d}.fake-block span{display:inline-block;width:28px;opacity:.55}
+.preview{max-width:100%;max-height:430px;margin:16px auto;display:none;border-radius:14px;border:2px solid var(--line,#ddd)}
+.dropzone.drag{transform:scale(1.01);border-style:solid}.continue{margin-bottom:40px}.tip{opacity:.75}.grid .card{cursor:pointer}.grid .card:active{transform:scale(.99)}
+</style><!-- v8-progressive -->
+<style>
+.step-card{background:rgba(255,255,255,.78);border:2px solid rgba(0,0,0,.08);border-radius:20px;padding:24px;margin:18px 0}
+.step-card h2{margin:8px 0 12px}
+.step-card p{font-size:18px;line-height:1.6}
+.progress-wrap{margin:18px 0}
+.progress-label{display:flex;justify-content:space-between;font-weight:800;margin-bottom:7px}
+.progress-bar{height:12px;border-radius:99px;background:#ddd;overflow:hidden}
+#lessonProgressFill{height:100%;background:#4c9f70;border-radius:99px;transition:width .3s}
+.fake-block{display:inline-block;margin:6px 6px 6px 0;padding:9px 13px;border-radius:8px;background:#4b91d1;color:#fff;font-weight:800}
+.dropzone.drag{transform:scale(1.01);background:rgba(76,159,112,.12)}
+.continue.ready{opacity:1}
+
+/* Exact Scratch block + individual explanation layout */
+.block-guide-subtitle{font-weight:700;margin:4px 0 12px}
+.block-stack{margin:10px 0}
+.scratch-block-line{position:relative}
+.scratch-block{
+  display:inline-block;
+  max-width:100%;
+  padding:11px 17px;
+  border-radius:9px;
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+  line-height:1.25;
+  box-shadow:0 3px 0 rgba(0,0,0,.2);
+  border:1px solid rgba(0,0,0,.14);
+}
+.block-meaning{
+  margin:7px 0 7px 12px;
+  padding:8px 11px;
+  border-left:3px solid rgba(76,159,112,.55);
+  font-size:14px;
+  line-height:1.45;
+}
+.block-connector{margin:4px 0 4px 24px;font-weight:900;font-size:18px}
+
+</style>
+<style>
+.real-step-guide{margin:18px 0;padding:18px;border:2px solid #d7c59b;border-radius:16px;background:rgba(255,255,255,.84);box-shadow:0 5px 0 rgba(47,94,55,.08)}
+.step-head{font-size:20px;font-weight:900;color:#2f5e37;margin-bottom:10px}.instruction{font-size:16px;line-height:1.55;margin-bottom:14px}.block-title{font-weight:900;margin-bottom:8px}.block-list{display:grid;gap:6px}.scratch-name{background:#f7c94c;border:2px solid #b88919;border-radius:10px;padding:9px 12px;font-weight:900}.block-explain{padding:2px 5px 8px 8px;line-height:1.45}.verify{margin-top:12px;padding:10px 12px;border-radius:10px;background:#eef7ee;border-left:5px solid #4c8b55;line-height:1.45}
+</style>
+<style>
+.real-step-guide .block-title{margin-top:16px;font-size:18px;font-weight:900}
+.scratch-block-stack{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin:12px 0 10px}
+.scratch-block{
+  position:relative;
+  min-height:42px;
+  max-width:100%;
+  padding:10px 18px 10px 16px;
+  border-radius:8px;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:16px;
+  font-weight:800;
+  line-height:1.2;
+  box-shadow:0 3px 0 rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.2);
+  border:1px solid rgba(0,0,0,.12);
+}
+.scratch-block.motion{background:#4c97ff}
+.scratch-block.looks{background:#9966ff}
+.scratch-block.sound{background:#cf63cf}
+.scratch-block.events{background:#ffbf00;color:#fff}
+.scratch-block.control{background:#ffab19}
+.scratch-block.variables{background:#ff8c1a}
+.scratch-block.sensing{background:#5cb1d6}
+.scratch-block .block-text{position:relative;z-index:2}
+.scratch-block .block-notch{
+  position:absolute;left:-1px;top:-5px;width:18px;height:8px;
+  background:inherit;border-radius:8px 8px 0 0;
+}
+.scratch-block .block-tab{
+  position:absolute;right:-7px;bottom:-1px;width:15px;height:9px;
+  background:inherit;border-radius:0 0 7px 7px;
+}
+.block-hint{
+  margin:8px 0 12px;
+  padding:9px 12px;
+  border-radius:10px;
+  background:#f3f7ff;
+  border-left:4px solid #4c97ff;
+  font-size:14px;
+}
+</style>
+
+
+<style id="variable-lesson-steps">
+.lesson-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}
+.lesson-head h2{margin:.2rem 0 .35rem}
+.eyebrow{font-size:.72rem;letter-spacing:.16em;font-weight:800;opacity:.65}
+.lesson-count{padding:8px 12px;border-radius:999px;background:#eef7df;font-weight:800;white-space:nowrap}
+.steps{display:grid;gap:14px}
+.step-card{display:flex;gap:14px;padding:16px;border:1px solid rgba(0,0,0,.08);border-radius:18px;background:rgba(255,255,255,.78);transition:.18s}
+.step-card.completed{border-color:#7aaa4b;box-shadow:0 5px 18px rgba(66,105,32,.08)}
+.step-card.needs-attention{animation:stepshake .22s linear}
+.step-number{min-width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#2f7d32;color:#fff;font-weight:900}
+.step-content{flex:1;min-width:0}
+.step-content h3{margin:0 0 5px}
+.instruction{margin:0 0 11px;font-weight:700}
+.block-list{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 12px}
+.scratch-block{display:inline-block;padding:7px 10px;border-radius:9px;background:#4c97ff;color:#fff;font-weight:800;font-size:.86rem;box-shadow:inset 0 -2px rgba(0,0,0,.12)}
+.why{padding:10px 12px;border-radius:12px;background:#fff8d8;font-size:.92rem}
+.done-line{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.9rem;font-weight:700}
+.lesson-footer{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.lesson-note{font-size:.82rem;opacity:.68}
+@keyframes stepshake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+</style>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='3' y='3' width='58' height='58' rx='15' fill='%232f8f4e'/%3E%3Cpath d='M11 29.5 32 19l21 10.5L32 40 11 29.5Z' fill='white'/%3E%3Cpath d='M18 34v8.5c0 4 6.3 7.5 14 7.5s14-3.5 14-7.5V34l-14 7-14-7Z' fill='white'/%3E%3Cpath d='M51 31v11' stroke='white' stroke-width='3.5' stroke-linecap='round'/%3E%3Ccircle cx='51' cy='44' r='2.2' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+<header><div class="logo"><svg class="brand-icon" viewBox="0 0 64 64" aria-hidden="true">
+<rect x="3" y="3" width="58" height="58" rx="15" fill="currentColor"/>
+<path d="M11 29.5 32 19l21 10.5L32 40 11 29.5Z" fill="#fff"/>
+<path d="M18 34v8.5c0 4 6.3 7.5 14 7.5s14-3.5 14-7.5V34l-14 7-14-7Z" fill="#fff"/>
+<path d="M51 31v11" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+<circle cx="51" cy="44" r="2.2" fill="#fff"/>
+</svg><span>Scratch Academy</span></div><div class="search"><input id="q" placeholder="🔎 Rechercher une leçon..." oninput="render()"></div><button class="dark" onclick="toggleDark()">🌙</button></header>
+<div class="layout">
+<aside>
+<h3>📚 Cours</h3>
+<button class="nav active" onclick="setFilter('Tous',this)">🏠 Toutes</button>
+<button class="nav" onclick="setFilter('Débutant',this)">🟢 Débutant</button>
+<button class="nav" onclick="setFilter('Logique',this)">🔵 Logique</button>
+<button class="nav" onclick="setFilter('Jeux',this)">🎮 Jeux</button>
+<button class="nav" onclick="setFilter('Avancé',this)">🔴 Avancé</button>
+<button class="nav" onclick="setFilter('Projets',this)">🚀 Projets</button>
+<hr><b>Progression</b><h2 id="prog">0 / 40</h2><div>⭐ XP : <b id="xp">0</b></div>
+<button class="nav" onclick="aiSettings()">⚙️ Configurer l'IA</button>
+<button class="nav" onclick="resetAll()">♻️ Réinitialiser</button>
+</aside>
+<main>
+<section id="home"><div class="hero"><div style="font-size:35px">🎮 🧩 🤖</div><h1>Apprends Scratch avec ton professeur IA</h1><p>Fais chaque défi, dépose ton screenshot et obtiens un retour avant de continuer.</p><div class="bar"><i id="bar"></i></div><p id="percent">0 % terminé</p></div><div id="cards" class="grid"></div></section>
+<section id="lesson" class="lesson"><button class="back" onclick="home()">← Retour</button><div class="card" id="content"></div></section>
+</main></div>
+
+<script>
+const names=["Découvrir Scratch","Sprites et arrière-plans","Ton premier programme","Déplacer un personnage","Les sons","Dire un message","Costumes et animation","Les événements","Les conditions SI","SI / SINON","Répéter","Répéter indéfiniment","Touches du clavier","Détection de collision","Opérateurs","Créer une variable","Faire un score","Ajouter des vies","Chronomètre","Écran de départ","Game Over","Créer un niveau","Jeu de plateforme","Labyrinthe","Jeu de course","Jeu de collecte","Listes","Clones","Ennemis multiples","IA simple","Inventaire","Boutique","Expérience et niveaux","Boss","Sauvegarde","Menus","Monde 1","Monde 2","Personnages et pouvoirs","Ennemis et boss","Polir ton jeu","Tester et corriger","Créer ton jeu complet"];
+const cats=names.map((_,i)=>i<8?"Débutant":i<15?"Logique":i<26?"Jeux":i<36?"Avancé":"Projets");
+const icons=["🟢","🎭","🚩","➡️","🔊","💬","🎨","⚡","🔷","🔷","🔁","♾️","⌨️","💥","➗","🔢","⭐","❤️","⏱️","▶️","💀","🗺️","🏃","🧱","🏎️","🍎","📋","👯","👾","🤖","🎒","🛒","✨","👹","💾","📱","🌲","🌋","🦸","⚔️","✨","🧪","🏆"];
+const desc=["Découvre l’interface, les sprites et les blocs.","Ajoute des personnages et des décors.","Utilise un événement pour lancer ton premier programme.","Utilise les blocs de mouvement pour déplacer ton sprite.","Ajoute des sons à ton projet.","Fais parler ton personnage.","Anime un personnage avec plusieurs costumes.","Découvre les événements et messages.","Utilise SI pour prendre une décision.","Utilise SI/SINON pour choisir entre deux actions.","Répète une action plusieurs fois.","Crée une boucle continue.","Crée les contrôles au clavier.","Détecte quand deux objets se touchent.","Compare des nombres et fais des calculs.","Stocke une valeur dans une variable.","Crée un score.","Compte les vies du joueur.","Crée un compte à rebours.","Crée un menu de départ.","Détecte la fin de la partie.","Détecte la fin d'un niveau et passe au suivant.","Crée un jeu de plateforme.","Construis un labyrinthe.","Crée un jeu de course.","Crée un jeu où l’on ramasse des objets.","Découvre les listes.","Crée plusieurs copies avec les clones.","Fais apparaître plusieurs ennemis.","Crée une IA simple.","Crée un inventaire.","Crée une boutique.","Ajoute XP et niveaux.","Crée un boss.","Imagine un système de sauvegarde.","Crée des menus et boutons.","Construis un premier monde.","Construis un deuxième monde différent.","Ajoute des pouvoirs.","Crée ennemis et boss.","Améliore sons, effets et animations.","Teste et corrige les bugs.","Assemble tout pour créer ton propre jeu."];
+const testLessonData = [{"title":"Découvrir Scratch","steps":[{"instruction":"Repère les zones principales de Scratch : scène, liste des sprites et palette de blocs.","blocks":["Scène","Liste des sprites","Palette de blocs"],"explanation":"Tu sais où construire le projet et où trouver les blocs."},{"instruction":"Choisis le sprite que tu veux programmer et place-le sur la scène.","blocks":["Choisir un sprite","Positionner le sprite"],"explanation":"Le sprite sélectionné reçoit maintenant les blocs que tu ajoutes."},{"instruction":"Commence le projet avec l’événement qui lance un programme.","blocks":["quand drapeau vert cliqué"],"explanation":"Le programme démarre lorsque tu cliques sur le drapeau vert."},{"instruction":"Ajoute une action simple puis teste le projet.","blocks":["avancer de (10) pas"],"explanation":"Le sprite exécute l'action après le démarrage."}]},{"title":"Sprites et décors","steps":[{"instruction":"Ajoute ou choisis un sprite qui sera le personnage du projet.","blocks":["choisir un sprite"],"explanation":"Le personnage est prêt à être programmé."},{"instruction":"Choisis un arrière-plan adapté à ton projet.","blocks":["choisir un arrière-plan"],"explanation":"La scène donne maintenant le contexte du projet."},{"instruction":"Place le sprite à un endroit précis au début du projet.","blocks":["quand drapeau vert cliqué","aller à x: (0) y: (0)"],"explanation":"Le personnage commence toujours au même endroit."},{"instruction":"Teste le projet et vérifie que le sprite apparaît sur le bon décor.","blocks":["quand drapeau vert cliqué"],"explanation":"Le projet commence avec une scène cohérente."}]},{"title":"Premier programme","steps":[{"instruction":"Fais démarrer le programme avec le drapeau vert.","blocks":["quand drapeau vert cliqué"],"explanation":"C'est le point de départ du script."},{"instruction":"Fais dire un message au sprite pendant quelques secondes.","blocks":["dire [Bonjour !] pendant (2) secondes"],"explanation":"Le sprite affiche le message à l'écran."},{"instruction":"Ajoute ensuite un petit déplacement.","blocks":["avancer de (10) pas"],"explanation":"Le programme enchaîne maintenant deux actions."},{"instruction":"Clique sur le drapeau vert et observe l'ordre des actions.","blocks":["quand drapeau vert cliqué","dire [Bonjour !] pendant (2) secondes","avancer de (10) pas"],"explanation":"Les blocs s'exécutent de haut en bas."}]},{"title":"Mouvement","steps":[{"instruction":"Place le personnage au départ.","blocks":["quand drapeau vert cliqué","aller à x: (0) y: (0)"],"explanation":"Le point de départ est reproductible."},{"instruction":"Fais avancer le personnage d'une petite distance.","blocks":["avancer de (10) pas"],"explanation":"Le sprite se déplace dans la direction où il regarde."},{"instruction":"Ajoute un déplacement horizontal contrôlé par le clavier.","blocks":["quand [flèche droite v] est pressée","ajouter (10) à x"],"explanation":"La flèche droite déplace le sprite vers la droite."},{"instruction":"Ajoute la commande opposée pour aller à gauche.","blocks":["quand [flèche gauche v] est pressée","ajouter (-10) à x"],"explanation":"Le personnage peut maintenant se déplacer dans les deux directions."},{"instruction":"Teste plusieurs pressions et ajuste la distance si nécessaire.","blocks":["ajouter (10) à x","ajouter (-10) à x"],"explanation":"Tu obtiens un contrôle horizontal jouable."}]},{"title":"Sons","steps":[{"instruction":"Ajoute un événement qui déclenche le son.","blocks":["quand drapeau vert cliqué"],"explanation":"Le son sera lancé au début du projet."},{"instruction":"Joue un son choisi.","blocks":["jouer le son [pop v] jusqu'au bout"],"explanation":"Le sprite joue le son sélectionné."},{"instruction":"Ajoute un son court à une action du personnage.","blocks":["jouer le son [pop v]"],"explanation":"Le son peut accompagner un événement sans bloquer tout le programme."},{"instruction":"Teste et règle le volume si le son est trop fort ou trop faible.","blocks":["mettre le volume à (100) %"],"explanation":"Le niveau sonore devient adapté au projet."}]},{"title":"Dialogue","steps":[{"instruction":"Fais parler le personnage au début de la scène.","blocks":["quand drapeau vert cliqué","dire [Bonjour !] pendant (2) secondes"],"explanation":"Le personnage accueille le joueur."},{"instruction":"Fais poser une question au personnage.","blocks":["demander [Quel est ton nom ?] et attendre"],"explanation":"Scratch attend la réponse avant de continuer."},{"instruction":"Utilise la réponse dans un nouveau message.","blocks":["dire (réponse)"],"explanation":"Le sprite peut réagir à ce que le joueur a écrit."},{"instruction":"Teste avec plusieurs réponses pour vérifier que le dialogue continue correctement.","blocks":["dire (réponse)"],"explanation":"Le dialogue devient interactif."}]},{"title":"Costumes et animation","steps":[{"instruction":"Fais démarrer l'animation.","blocks":["quand drapeau vert cliqué"],"explanation":"Le costume peut maintenant changer pendant le programme."},{"instruction":"Passe au costume suivant.","blocks":["costume suivant"],"explanation":"Le sprite prend l'apparence suivante."},{"instruction":"Répète rapidement le changement de costume.","blocks":["répéter (10) fois","costume suivant","attendre (0.1) secondes"],"explanation":"Une suite de costumes crée une animation."},{"instruction":"Ajoute un petit délai pour que les changements soient visibles.","blocks":["attendre (0.1) secondes"],"explanation":"L'animation n'est pas trop rapide pour être observée."},{"instruction":"Teste et ajuste le nombre de répétitions.","blocks":["répéter (10) fois","costume suivant"],"explanation":"Tu contrôles la durée de l'animation."}]},{"title":"Événements et messages","steps":[{"instruction":"Crée un événement de départ pour le premier personnage.","blocks":["quand drapeau vert cliqué"],"explanation":"Le premier script peut lancer la scène."},{"instruction":"Envoie un message quand une action est terminée.","blocks":["diffuser [début v]"],"explanation":"Le message prévient les autres scripts."},{"instruction":"Fais réagir un autre sprite à ce message.","blocks":["quand je reçois [début v]"],"explanation":"Un autre script démarre exactement à la réception."},{"instruction":"Ajoute l'action qui doit suivre la réception.","blocks":["dire [À toi de jouer !] pendant (2) secondes"],"explanation":"Les sprites peuvent maintenant se synchroniser."},{"instruction":"Teste l'ordre des messages pour éviter les actions trop tôt ou trop tard.","blocks":["diffuser [début v] et attendre"],"explanation":"Les événements restent coordonnés."}]},{"title":"SI","steps":[{"instruction":"Déclenche le programme.","blocks":["quand drapeau vert cliqué"],"explanation":"Le script est prêt à vérifier une condition."},{"instruction":"Ajoute une condition simple.","blocks":["si <> alors"],"explanation":"Le bloc SI exécute son contenu seulement si la condition est vraie."},{"instruction":"Place une action dans le SI.","blocks":["si <touche [pointeur de souris v] ?> alors","dire [Touché !] pendant (1) secondes"],"explanation":"Le message apparaît seulement lorsque la condition est vraie."},{"instruction":"Teste la condition vraie puis fausse.","blocks":["si <touche [pointeur de souris v] ?> alors"],"explanation":"Tu vois la différence entre les deux cas."},{"instruction":"Modifie la condition pour créer ton propre comportement.","blocks":["si <(10) > (5)> alors"],"explanation":"Tu peux réutiliser la structure avec différentes conditions."}]},{"title":"SI / SINON","steps":[{"instruction":"Démarre le script.","blocks":["quand drapeau vert cliqué"],"explanation":"Le programme peut maintenant choisir entre deux actions."},{"instruction":"Ajoute le bloc SI/SINON.","blocks":["si <> alors sinon"],"explanation":"Scratch choisit un seul des deux chemins."},{"instruction":"Mets l'action du cas vrai dans la première partie.","blocks":["si <touche [pointeur de souris v] ?> alors","dire [Oui] pendant (1) secondes"],"explanation":"Le sprite répond lorsque la condition est vraie."},{"instruction":"Mets une autre action dans SINON.","blocks":["sinon","dire [Non] pendant (1) secondes"],"explanation":"Le sprite a maintenant une réponse pour le cas contraire."},{"instruction":"Teste les deux situations.","blocks":["si <touche [pointeur de souris v] ?> alors sinon"],"explanation":"Ton programme gère les deux possibilités."}]},{"title":"Répéter","steps":[{"instruction":"Lance le programme.","blocks":["quand drapeau vert cliqué"],"explanation":"Le script commence une seule fois."},{"instruction":"Ajoute une boucle avec un nombre précis de répétitions.","blocks":["répéter (10) fois"],"explanation":"Tout ce qui est à l'intérieur sera répété."},{"instruction":"Place une action dans la boucle.","blocks":["répéter (10) fois","avancer de (10) pas"],"explanation":"Le sprite avance plusieurs fois automatiquement."},{"instruction":"Ajoute une pause pour contrôler la vitesse.","blocks":["attendre (0.1) secondes"],"explanation":"La répétition devient visible et contrôlable."}]},{"title":"Pour toujours","steps":[{"instruction":"Démarre le programme.","blocks":["quand drapeau vert cliqué"],"explanation":"Le script peut maintenant fonctionner en continu."},{"instruction":"Ajoute une boucle infinie.","blocks":["pour toujours"],"explanation":"Le contenu se répète tant que le projet fonctionne."},{"instruction":"Place un mouvement dans la boucle.","blocks":["pour toujours","avancer de (5) pas"],"explanation":"Le sprite avance continuellement."},{"instruction":"Ajoute une condition ou une attente pour éviter un comportement incontrôlé.","blocks":["pour toujours","si <> alors","attendre (0.1) secondes"],"explanation":"La boucle peut réagir aux événements du jeu."}]},{"title":"Clavier","steps":[{"instruction":"Prépare le contrôle avec un événement de touche.","blocks":["quand [espace v] est pressée"],"explanation":"Le script démarre lorsque la touche choisie est pressée."},{"instruction":"Associe la touche droite au déplacement.","blocks":["quand [flèche droite v] est pressée","ajouter (10) à x"],"explanation":"Le joueur peut aller vers la droite."},{"instruction":"Associe la touche gauche au déplacement inverse.","blocks":["quand [flèche gauche v] est pressée","ajouter (-10) à x"],"explanation":"Le joueur peut revenir vers la gauche."},{"instruction":"Ajoute le haut et le bas si ton projet en a besoin.","blocks":["quand [flèche haut v] est pressée","ajouter (10) à y","quand [flèche bas v] est pressée","ajouter (-10) à y"],"explanation":"Le personnage peut se déplacer dans quatre directions."},{"instruction":"Teste chaque touche séparément.","blocks":["touche [espace v] pressée ?"],"explanation":"Tu vérifies que chaque commande répond correctement."},{"instruction":"Ajuste les valeurs pour rendre le contrôle confortable.","blocks":["ajouter (10) à x","ajouter (10) à y"],"explanation":"La vitesse correspond maintenant au jeu."}]},{"title":"Collision","steps":[{"instruction":"Fais fonctionner le jeu en continu.","blocks":["quand drapeau vert cliqué","pour toujours"],"explanation":"La collision peut être surveillée pendant toute la partie."},{"instruction":"Détecte le contact avec un objet ou une couleur.","blocks":["si <touche [Sprite2 v] ?> alors"],"explanation":"Scratch sait quand les deux éléments se touchent."},{"instruction":"Ajoute la réaction à la collision.","blocks":["si <touche [Sprite2 v] ?> alors","jouer le son [pop v]"],"explanation":"Une action se produit au moment du contact."},{"instruction":"Pour un obstacle, arrête ou déplace le joueur après le contact.","blocks":["si <touche [Sprite2 v] ?> alors","aller à x: (0) y: (0)"],"explanation":"Le joueur peut être replacé après une collision."},{"instruction":"Teste plusieurs contacts et corrige le placement.","blocks":["touche [Sprite2 v] ?"],"explanation":"La collision devient fiable dans le jeu."},{"instruction":"Ajoute éventuellement un score ou une perte de vie.","blocks":["si <touche [Sprite2 v] ?> alors","ajouter (-1) à [Vies v]"],"explanation":"La collision peut maintenant avoir une conséquence de jeu."}]},{"title":"Opérateurs","steps":[{"instruction":"Crée une valeur numérique ou une condition à comparer.","blocks":["si <(10) > (5)> alors"],"explanation":"Les opérateurs permettent de prendre des décisions."},{"instruction":"Combine deux valeurs avec une comparaison.","blocks":["si <(Score) > (10)> alors"],"explanation":"Le programme peut vérifier la progression du joueur."},{"instruction":"Utilise ET pour exiger deux conditions.","blocks":["si <<touché ?> et <(Vies) > (0)>> alors"],"explanation":"Les deux conditions doivent être vraies."},{"instruction":"Utilise OU lorsqu'une seule condition suffit.","blocks":["si <<touche [A v] ?> ou <touche [D v] ?>> alors"],"explanation":"Une des deux conditions peut déclencher l'action."},{"instruction":"Utilise NON pour inverser une condition.","blocks":["si <non <touche [Obstacle v] ?>> alors"],"explanation":"La logique peut aussi vérifier qu'une condition est fausse."}]},{"title":"Variables","steps":[{"instruction":"Crée une variable appelée Score.","blocks":["nouvelle variable [Score]"],"explanation":"La variable garde une valeur qui peut changer."},{"instruction":"Réinitialise-la au début du projet.","blocks":["quand drapeau vert cliqué","mettre [Score v] à (0)"],"explanation":"Chaque partie commence avec un score propre."},{"instruction":"Modifie la valeur quand le joueur réussit une action.","blocks":["ajouter (1) à [Score v]"],"explanation":"Le score augmente sans avoir à le remplacer manuellement."},{"instruction":"Affiche la valeur pendant le jeu.","blocks":["montrer la variable [Score v]"],"explanation":"Le joueur peut voir son score."},{"instruction":"Teste plusieurs réussites et vérifie la valeur.","blocks":["ajouter (1) à [Score v]"],"explanation":"La variable suit correctement la progression."}]},{"title":"Score","steps":[{"instruction":"Crée et initialise le score.","blocks":["nouvelle variable [Score]","quand drapeau vert cliqué","mettre [Score v] à (0)"],"explanation":"Le score repart de zéro à chaque partie."},{"instruction":"Détecte une réussite, par exemple toucher un objet.","blocks":["si <touche [Objet v] ?> alors"],"explanation":"Le programme sait quand attribuer les points."},{"instruction":"Ajoute les points et retire l'objet collecté.","blocks":["ajouter (1) à [Score v]","cacher"],"explanation":"Le joueur gagne des points et l'objet ne peut pas être pris plusieurs fois."},{"instruction":"Affiche le score pendant la partie.","blocks":["montrer la variable [Score v]"],"explanation":"Le joueur voit sa progression."},{"instruction":"Fais réapparaître l'objet lorsque le jeu recommence.","blocks":["quand drapeau vert cliqué","montrer"],"explanation":"Une nouvelle partie peut recommencer correctement."},{"instruction":"Teste plusieurs objets et adapte la valeur des points.","blocks":["ajouter (1) à [Score v]"],"explanation":"Le système de score devient cohérent."}]},{"title":"Vies","steps":[{"instruction":"Crée la variable Vies et donne-lui une valeur de départ.","blocks":["nouvelle variable [Vies]","mettre [Vies v] à (3)"],"explanation":"Le joueur commence avec trois chances."},{"instruction":"Détecte une situation dangereuse.","blocks":["si <touche [Obstacle v] ?> alors"],"explanation":"Le jeu peut maintenant retirer une vie."},{"instruction":"Retire une vie et replace le joueur.","blocks":["ajouter (-1) à [Vies v]","aller à x: (0) y: (0)"],"explanation":"Le joueur perd une chance mais peut continuer."},{"instruction":"Empêche la perte de vies de se répéter instantanément.","blocks":["attendre (1) secondes"],"explanation":"Le joueur a le temps de sortir de l'obstacle."},{"instruction":"Vérifie si toutes les vies sont perdues.","blocks":["si <(Vies) = (0)> alors"],"explanation":"Le programme sait quand la partie doit se terminer."},{"instruction":"Teste avec plusieurs collisions.","blocks":["ajouter (-1) à [Vies v]","si <(Vies) = (0)> alors"],"explanation":"Le système de vies fonctionne jusqu'à la fin."}]},{"title":"Timer","steps":[{"instruction":"Crée une variable Temps et initialise-la.","blocks":["nouvelle variable [Temps]","mettre [Temps v] à (30)"],"explanation":"Le compte à rebours commence à 30."},{"instruction":"Fais fonctionner le compte à rebours en continu.","blocks":["pour toujours"],"explanation":"La valeur peut diminuer automatiquement."},{"instruction":"Diminue le temps une fois par seconde.","blocks":["ajouter (-1) à [Temps v]","attendre (1) secondes"],"explanation":"Le temps baisse à intervalles réguliers."},{"instruction":"Empêche le temps de descendre sous zéro.","blocks":["si <(Temps) > (0)> alors","ajouter (-1) à [Temps v]"],"explanation":"Le compte à rebours reste dans une plage correcte."},{"instruction":"Détecte la fin du temps.","blocks":["si <(Temps) = (0)> alors"],"explanation":"Le jeu sait que le temps est écoulé."},{"instruction":"Déclenche la fin de partie.","blocks":["si <(Temps) = (0)> alors","diffuser [Game Over v]"],"explanation":"Le compte à rebours peut terminer la partie."},{"instruction":"Teste avec un temps court puis remets la durée normale.","blocks":["mettre [Temps v] à (5)","mettre [Temps v] à (30)"],"explanation":"Tu peux tester rapidement sans attendre 30 secondes."}]},{"title":"Écran de départ","steps":[{"instruction":"Crée un message qui représente le début du jeu.","blocks":["quand drapeau vert cliqué","diffuser [Menu v]"],"explanation":"Le projet commence sur le menu."},{"instruction":"Affiche le titre et les instructions.","blocks":["quand je reçois [Menu v]","dire [Appuie sur espace pour jouer] pendant (2) secondes"],"explanation":"Le joueur comprend comment commencer."},{"instruction":"Attends une action du joueur.","blocks":["attendre jusqu'à <touche [espace v] pressée ?>"],"explanation":"Le jeu ne commence qu'après l'action du joueur."},{"instruction":"Envoie le message de lancement.","blocks":["diffuser [Jouer v]"],"explanation":"Les scripts du jeu peuvent maintenant démarrer."},{"instruction":"Fais disparaître les éléments du menu pendant la partie.","blocks":["quand je reçois [Jouer v]","cacher"],"explanation":"L'écran de jeu remplace le menu."},{"instruction":"Teste le passage menu → jeu.","blocks":["diffuser [Menu v]","diffuser [Jouer v]"],"explanation":"Le flux de départ fonctionne."},{"instruction":"Ajoute une possibilité de recommencer depuis le menu.","blocks":["diffuser [Menu v]"],"explanation":"Le joueur peut revenir au point de départ."}]},{"title":"Game Over","steps":[{"instruction":"Crée l'événement qui signale la fin.","blocks":["diffuser [Game Over v]"],"explanation":"Les autres sprites savent que la partie est terminée."},{"instruction":"Arrête les actions du joueur lorsque la partie se termine.","blocks":["quand je reçois [Game Over v]","dire [Fin de partie] pendant (2) secondes"],"explanation":"Le joueur voit clairement que la partie est terminée."},{"instruction":"Affiche le score final.","blocks":["dire (Score) pendant (2) secondes"],"explanation":"Le résultat de la partie est présenté."},{"instruction":"Cache les éléments qui ne doivent plus être actifs.","blocks":["cacher"],"explanation":"L'écran devient un véritable écran de fin."},{"instruction":"Attends une commande pour recommencer.","blocks":["attendre jusqu'à <touche [espace v] pressée ?>"],"explanation":"Le joueur peut choisir de relancer la partie."},{"instruction":"Réinitialise les variables avant une nouvelle partie.","blocks":["mettre [Score v] à (0)","mettre [Vies v] à (3)"],"explanation":"La nouvelle partie repart avec des valeurs propres."}]},{"title":"Niveaux","steps":[{"instruction":"Crée une variable Niveau et commence au niveau 1.","blocks":["nouvelle variable [Niveau]","mettre [Niveau v] à (1)"],"explanation":"Le jeu connaît son niveau actuel."},{"instruction":"Détecte quand le joueur atteint l'objectif du niveau.","blocks":["si <(Score) > (10)> alors"],"explanation":"Le programme peut décider quand passer au niveau suivant."},{"instruction":"Augmente le niveau et prévient les autres scripts.","blocks":["ajouter (1) à [Niveau v]","diffuser [Nouveau niveau v]"],"explanation":"Les éléments du jeu peuvent changer."},{"instruction":"Fais réagir les obstacles au nouveau niveau.","blocks":["quand je reçois [Nouveau niveau v]","changer l'effet [couleur v] par (10)"],"explanation":"Le changement de niveau devient visible."},{"instruction":"Augmente progressivement la difficulté.","blocks":["si <(Niveau) > (1)> alors","ajouter (1) à [vitesse v]"],"explanation":"Les niveaux peuvent devenir plus difficiles."},{"instruction":"Réinitialise les conditions nécessaires au début d'un niveau.","blocks":["mettre [Score v] à (0)","diffuser [Nouveau niveau v]"],"explanation":"Chaque niveau peut repartir avec son propre objectif."},{"instruction":"Teste le passage entre plusieurs niveaux.","blocks":["ajouter (1) à [Niveau v]","si <(Niveau) > (3)> alors"],"explanation":"Le système sait gérer une progression."}]},{"title":"Plateforme","steps":[{"instruction":"Crée les variables nécessaires au joueur.","blocks":["nouvelle variable [VitesseY]","nouvelle variable [Sol]"],"explanation":"Le joueur peut mémoriser son mouvement vertical."},{"instruction":"Initialise la position et la vitesse.","blocks":["quand drapeau vert cliqué","aller à x: (0) y: (0)","mettre [VitesseY v] à (0)"],"explanation":"Le personnage commence dans un état stable."},{"instruction":"Ajoute la gravité en continu.","blocks":["pour toujours","ajouter (-1) à [VitesseY v]","ajouter (VitesseY) à y"],"explanation":"La vitesse verticale change et le joueur tombe."},{"instruction":"Détecte le sol.","blocks":["si <touche [Sol v] ?> alors"],"explanation":"Le jeu peut savoir quand le joueur touche une plateforme."},{"instruction":"Empêche le joueur de tomber à travers le sol.","blocks":["si <touche [Sol v] ?> alors","répéter jusqu'à <non <touche [Sol v] ?>>","ajouter (1) à y"],"explanation":"Le personnage remonte hors du sol."},{"instruction":"Ajoute le saut avec une touche.","blocks":["quand [espace v] est pressée","mettre [VitesseY v] à (15)"],"explanation":"Le joueur reçoit une vitesse vers le haut."},{"instruction":"Autorise le saut seulement lorsqu'il est au sol.","blocks":["si <touche [Sol v] ?> alors","mettre [VitesseY v] à (15)"],"explanation":"Le saut ne peut pas être déclenché dans les airs."},{"instruction":"Ajoute le déplacement horizontal.","blocks":["quand [flèche droite v] est pressée","ajouter (5) à x","quand [flèche gauche v] est pressée","ajouter (-5) à x"],"explanation":"Le joueur peut courir sur les plateformes."},{"instruction":"Teste les bords, les sauts et les collisions.","blocks":["si <touche [Sol v] ?> alors","ajouter (5) à x","ajouter (VitesseY) à y"],"explanation":"Le contrôleur de plateforme devient jouable."}]},{"title":"Labyrinthe","steps":[{"instruction":"Place le joueur au départ et choisis le mur à détecter.","blocks":["quand drapeau vert cliqué","aller à x: (0) y: (0)"],"explanation":"Le labyrinthe commence toujours au même endroit."},{"instruction":"Déplace le joueur avec les touches.","blocks":["quand [flèche droite v] est pressée","ajouter (5) à x","quand [flèche gauche v] est pressée","ajouter (-5) à x"],"explanation":"Le joueur peut parcourir le labyrinthe."},{"instruction":"Empêche le passage à travers les murs.","blocks":["si <touche la couleur [#000000] ?> alors","aller à x: (0) y: (0)"],"explanation":"Le joueur est replacé lorsqu'il touche un mur."},{"instruction":"Ajoute les déplacements verticaux.","blocks":["quand [flèche haut v] est pressée","ajouter (5) à y","quand [flèche bas v] est pressée","ajouter (-5) à y"],"explanation":"Le joueur peut explorer toute la carte."},{"instruction":"Détecte l'arrivée.","blocks":["si <touche [Arrivée v] ?> alors"],"explanation":"Le jeu sait quand le labyrinthe est terminé."},{"instruction":"Affiche une réussite et passe à la suite.","blocks":["si <touche [Arrivée v] ?> alors","dire [Bravo !] pendant (2) secondes","diffuser [Victoire v]"],"explanation":"Le joueur reçoit une confirmation claire."},{"instruction":"Teste les coins et les passages étroits.","blocks":["touche la couleur [#000000] ?"],"explanation":"Les collisions doivent rester fiables partout dans le labyrinthe."}]},{"title":"Course","steps":[{"instruction":"Initialise le joueur et le score.","blocks":["quand drapeau vert cliqué","mettre [Score v] à (0)"],"explanation":"La course commence avec un score propre."},{"instruction":"Fais avancer le joueur.","blocks":["quand [flèche droite v] est pressée","ajouter (8) à x"],"explanation":"Le joueur contrôle sa vitesse horizontale."},{"instruction":"Crée un adversaire ou un obstacle mobile.","blocks":["pour toujours","avancer de (6) pas"],"explanation":"Un élément du parcours se déplace automatiquement."},{"instruction":"Détecte le contact avec l'obstacle.","blocks":["si <touche [Obstacle v] ?> alors","ajouter (-1) à [Vies v]"],"explanation":"Une collision a une conséquence."},{"instruction":"Ajoute une récompense pour progresser.","blocks":["si <touche [Checkpoint v] ?> alors","ajouter (1) à [Score v]"],"explanation":"Le joueur gagne des points en avançant."},{"instruction":"Augmente la vitesse avec la progression.","blocks":["si <(Score) > (5)> alors","ajouter (1) à [vitesse v]"],"explanation":"La course devient progressivement plus intense."},{"instruction":"Ajoute une condition d'arrivée.","blocks":["si <touche [Arrivée v] ?> alors","diffuser [Victoire v]"],"explanation":"Le parcours possède une vraie fin."},{"instruction":"Teste plusieurs passages et équilibre la difficulté.","blocks":["ajouter (1) à [Score v]","ajouter (1) à [vitesse v]"],"explanation":"La course reste jouable tout en progressant."}]},{"title":"Collecte","steps":[{"instruction":"Place l'objet à collecter et réinitialise son état.","blocks":["quand drapeau vert cliqué","aller à x: (100) y: (0)","montrer"],"explanation":"L'objet est disponible au début."},{"instruction":"Détecte quand le joueur le touche.","blocks":["si <touche [Joueur v] ?> alors"],"explanation":"Le jeu reconnaît la collecte."},{"instruction":"Ajoute un point et fais disparaître l'objet.","blocks":["ajouter (1) à [Score v]","cacher"],"explanation":"Une collecte rapporte exactement une récompense."},{"instruction":"Crée plusieurs objets avec des positions différentes.","blocks":["aller à x: (100) y: (0)","aller à x: (-100) y: (50)"],"explanation":"La collecte demande plus d'exploration."},{"instruction":"Fais réapparaître un objet à une nouvelle position.","blocks":["montrer","aller à x: (nombre aléatoire entre (-200) et (200)) y: (nombre aléatoire entre (-150) et (150))"],"explanation":"L'objet peut revenir dans un endroit différent."},{"instruction":"Ajoute un objectif de collecte.","blocks":["si <(Score) = (10)> alors"],"explanation":"Le jeu peut savoir quand assez d'objets ont été collectés."},{"instruction":"Déclenche la victoire.","blocks":["si <(Score) = (10)> alors","diffuser [Victoire v]"],"explanation":"La collecte mène à une vraie fin de niveau."}]},{"title":"Listes","steps":[{"instruction":"Crée une liste pour stocker plusieurs éléments.","blocks":["nouvelle liste [Objets]"],"explanation":"Une liste peut contenir plusieurs valeurs."},{"instruction":"Ajoute un élément dans la liste.","blocks":["ajouter [pomme] à [Objets v]"],"explanation":"Le projet mémorise une nouvelle donnée."},{"instruction":"Lis ou montre les éléments enregistrés.","blocks":["dire (élément (1) de [Objets v])"],"explanation":"Le programme peut récupérer une valeur précise."},{"instruction":"Supprime une valeur quand elle n'est plus nécessaire.","blocks":["supprimer (1) de [Objets v]"],"explanation":"La liste peut être modifiée pendant le jeu."},{"instruction":"Utilise la longueur de la liste pour vérifier son contenu.","blocks":["si <(longueur de [Objets v]) > (0)> alors"],"explanation":"Le programme peut savoir si la liste contient encore quelque chose."},{"instruction":"Teste ajout, lecture et suppression dans un même projet.","blocks":["ajouter [objet] à [Objets v]","dire (élément (1) de [Objets v])","supprimer (1) de [Objets v]"],"explanation":"Tu contrôles le cycle complet d'une liste."}]},{"title":"Clones","steps":[{"instruction":"Crée le script qui fabrique un clone.","blocks":["quand drapeau vert cliqué","répéter (10) fois","créer un clone de [moi-même v]"],"explanation":"Le projet peut créer plusieurs copies du sprite."},{"instruction":"Donne à chaque clone une position de départ différente.","blocks":["quand je commence comme un clone","aller à x: (nombre aléatoire entre (-220) et (220)) y: (180)"],"explanation":"Chaque clone apparaît à un endroit différent."},{"instruction":"Fais descendre les clones.","blocks":["pour toujours","ajouter (-5) à y"],"explanation":"Les copies deviennent des objets mobiles."},{"instruction":"Détecte une collision avec le joueur.","blocks":["si <touche [Joueur v] ?> alors"],"explanation":"Chaque clone peut réagir au joueur."},{"instruction":"Supprime le clone après sa collision.","blocks":["si <touche [Joueur v] ?> alors","supprimer ce clone"],"explanation":"Le clone disparaît après avoir été utilisé."},{"instruction":"Ajoute une limite au nombre de clones actifs.","blocks":["répéter (10) fois","créer un clone de [moi-même v]"],"explanation":"Le jeu contrôle la quantité d'objets créés."},{"instruction":"Teste les clones à différentes vitesses.","blocks":["ajouter (-5) à y","ajouter (-8) à y"],"explanation":"Le système de clones peut produire plusieurs difficultés."}]},{"title":"Ennemis multiples","steps":[{"instruction":"Crée plusieurs ennemis ou utilise un système de clones.","blocks":["répéter (5) fois","créer un clone de [moi-même v]"],"explanation":"Le jeu peut avoir plusieurs adversaires."},{"instruction":"Donne une position de départ aléatoire à chaque ennemi.","blocks":["quand je commence comme un clone","aller à x: (nombre aléatoire entre (-220) et (220)) y: (nombre aléatoire entre (-120) et (120))"],"explanation":"Les ennemis ne commencent pas tous au même endroit."},{"instruction":"Fais bouger les ennemis en continu.","blocks":["pour toujours","avancer de (4) pas"],"explanation":"Chaque ennemi se déplace automatiquement."},{"instruction":"Ajoute un changement de direction quand un bord est atteint.","blocks":["si <touche le bord ?> alors","rebondir"],"explanation":"Les ennemis restent dans la scène."},{"instruction":"Détecte le joueur.","blocks":["si <touche [Joueur v] ?> alors","diffuser [Touché v]"],"explanation":"Le jeu peut réagir à une attaque ennemie."},{"instruction":"Supprime ou replace l'ennemi après l'action.","blocks":["si <touche [Joueur v] ?> alors","supprimer ce clone"],"explanation":"L'ennemi ne reste pas bloqué après l'événement."},{"instruction":"Ajoute une difficulté qui augmente avec le niveau.","blocks":["si <(Niveau) > (1)> alors","ajouter (1) à [vitesse v]"],"explanation":"Les ennemis deviennent plus exigeants."},{"instruction":"Teste plusieurs ennemis simultanément.","blocks":["créer un clone de [moi-même v]","si <touche [Joueur v] ?> alors"],"explanation":"Le système fonctionne avec plusieurs adversaires."}]},{"title":"IA simple","steps":[{"instruction":"Fais suivre à l'ennemi la position horizontale du joueur.","blocks":["si <(position x) de [Joueur v] > (position x)> alors","ajouter (3) à x"],"explanation":"L'ennemi commence à poursuivre le joueur."},{"instruction":"Ajoute le déplacement inverse.","blocks":["si <(position x) de [Joueur v] < (position x)> alors","ajouter (-3) à x"],"explanation":"L'ennemi peut suivre dans les deux directions."},{"instruction":"Ajoute un mouvement vertical si le jeu le demande.","blocks":["si <(position y) de [Joueur v] > (position y)> alors","ajouter (2) à y"],"explanation":"L'ennemi peut aussi se rapprocher verticalement."},{"instruction":"Fais vérifier les décisions en continu.","blocks":["pour toujours","si <> alors"],"explanation":"L'ennemi adapte son comportement à chaque instant."},{"instruction":"Ajoute une distance minimale pour éviter qu'il colle trop au joueur.","blocks":["si <(distance de [Joueur v]) > (40)> alors"],"explanation":"L'ennemi poursuit seulement lorsqu'il est assez loin."},{"instruction":"Ajoute une réaction lorsqu'il atteint le joueur.","blocks":["si <touche [Joueur v] ?> alors","diffuser [Touché v]"],"explanation":"L'IA produit une conséquence lorsqu'elle réussit."},{"instruction":"Teste plusieurs distances et vitesses.","blocks":["ajouter (3) à x","ajouter (-3) à x"],"explanation":"Le comportement peut être équilibré."}]},{"title":"Inventaire","steps":[{"instruction":"Crée une liste d'objets possédés.","blocks":["nouvelle liste [Inventaire]"],"explanation":"La liste représente le contenu du sac du joueur."},{"instruction":"Ajoute un objet lorsqu'il est ramassé.","blocks":["si <touche [Objet v] ?> alors","ajouter [clé] à [Inventaire v]"],"explanation":"L'inventaire se remplit automatiquement."},{"instruction":"Fais disparaître l'objet ramassé.","blocks":["si <touche [Objet v] ?> alors","cacher"],"explanation":"Le même objet ne peut pas être pris plusieurs fois."},{"instruction":"Vérifie si le joueur possède un objet précis.","blocks":["si <[clé] appartient à [Inventaire v] ?> alors"],"explanation":"Le jeu peut vérifier les objets nécessaires."},{"instruction":"Utilise l'objet pour débloquer une action.","blocks":["si <[clé] appartient à [Inventaire v] ?> alors","diffuser [Porte ouverte v]"],"explanation":"La clé peut maintenant servir dans le jeu."},{"instruction":"Supprime l'objet après utilisation si nécessaire.","blocks":["supprimer (élément (1) de [Inventaire v]) de [Inventaire v]"],"explanation":"L'objet peut être consommé."},{"instruction":"Affiche l'inventaire pour aider le joueur.","blocks":["montrer la liste [Inventaire v]"],"explanation":"Le joueur voit ce qu'il possède."},{"instruction":"Teste collecte, vérification et utilisation.","blocks":["ajouter [clé] à [Inventaire v]","si <[clé] appartient à [Inventaire v] ?> alors","diffuser [Porte ouverte v]"],"explanation":"Le cycle complet de l'inventaire fonctionne."}]},{"title":"Boutique","steps":[{"instruction":"Crée les variables nécessaires.","blocks":["nouvelle variable [Pièces]","nouvelle variable [Prix]"],"explanation":"Le joueur et le magasin ont maintenant des valeurs."},{"instruction":"Initialise les pièces du joueur.","blocks":["quand drapeau vert cliqué","mettre [Pièces v] à (20)"],"explanation":"La partie commence avec une monnaie de départ."},{"instruction":"Définis le prix d'un objet.","blocks":["mettre [Prix v] à (10)"],"explanation":"Le magasin connaît le coût de l'article."},{"instruction":"Vérifie que le joueur a assez de pièces.","blocks":["si <(Pièces) >= (Prix)> alors"],"explanation":"L'achat n'est possible que si le joueur peut payer."},{"instruction":"Retire le prix et ajoute l'objet.","blocks":["ajouter ((0) - (Prix)) à [Pièces v]","ajouter [Objet] à [Inventaire v]"],"explanation":"L'achat modifie la monnaie et l'inventaire."},{"instruction":"Refuse l'achat si les pièces sont insuffisantes.","blocks":["sinon","dire [Pas assez de pièces] pendant (2) secondes"],"explanation":"Le joueur reçoit une explication."},{"instruction":"Ajoute plusieurs articles avec des prix différents.","blocks":["mettre [Prix v] à (5)","mettre [Prix v] à (15)"],"explanation":"La boutique peut proposer plusieurs choix."},{"instruction":"Ajoute un retour d'information après l'achat.","blocks":["dire [Achat réussi !] pendant (2) secondes"],"explanation":"Le joueur sait immédiatement si l'achat a fonctionné."},{"instruction":"Teste les cas assez/pas assez de pièces.","blocks":["si <(Pièces) >= (Prix)> alors sinon"],"explanation":"La boutique gère les deux situations."}]},{"title":"XP et niveaux","steps":[{"instruction":"Crée les variables XP et Niveau.","blocks":["nouvelle variable [XP]","nouvelle variable [Niveau]"],"explanation":"Le jeu peut mémoriser l'expérience et le niveau."},{"instruction":"Initialise les deux valeurs.","blocks":["quand drapeau vert cliqué","mettre [XP v] à (0)","mettre [Niveau v] à (1)"],"explanation":"Le joueur commence au niveau 1."},{"instruction":"Ajoute de l'XP après une réussite.","blocks":["ajouter (10) à [XP v]"],"explanation":"Chaque réussite fait progresser le joueur."},{"instruction":"Vérifie si assez d'XP a été gagnée.","blocks":["si <(XP) >= (100)> alors"],"explanation":"Le jeu peut détecter le passage de niveau."},{"instruction":"Augmente le niveau et retire le coût d'XP.","blocks":["ajouter (1) à [Niveau v]","ajouter (-100) à [XP v]"],"explanation":"Le joueur monte de niveau sans perdre toute sa progression."},{"instruction":"Augmente la difficulté ou les récompenses.","blocks":["si <(Niveau) > (1)> alors","ajouter (5) à [récompense v]"],"explanation":"Le système peut évoluer avec le joueur."},{"instruction":"Affiche le niveau et l'XP.","blocks":["montrer la variable [XP v]","montrer la variable [Niveau v]"],"explanation":"Le joueur voit sa progression."},{"instruction":"Teste plusieurs passages de niveau.","blocks":["ajouter (100) à [XP v]","si <(XP) >= (100)> alors"],"explanation":"Le système peut gérer plusieurs montées de niveau."}]},{"title":"Boss","steps":[{"instruction":"Crée la vie du boss et initialise-la.","blocks":["nouvelle variable [VieBoss]","mettre [VieBoss v] à (100)"],"explanation":"Le boss possède une réserve de points de vie."},{"instruction":"Détecte une attaque du joueur.","blocks":["si <touche [Attaque v] ?> alors"],"explanation":"Le boss peut recevoir des dégâts."},{"instruction":"Retire des points de vie.","blocks":["ajouter (-10) à [VieBoss v]"],"explanation":"Chaque attaque réduit la vie du boss."},{"instruction":"Fais réagir le boss entre les attaques.","blocks":["pour toujours","avancer de (3) pas"],"explanation":"Le boss continue d'agir pendant le combat."},{"instruction":"Augmente la difficulté lorsque sa vie baisse.","blocks":["si <(VieBoss) < (50)> alors","ajouter (2) à [vitesseBoss v]"],"explanation":"La deuxième phase devient plus difficile."},{"instruction":"Détecte quand le boss est vaincu.","blocks":["si <(VieBoss) <= (0)> alors"],"explanation":"Le jeu sait quand le combat est terminé."},{"instruction":"Déclenche la victoire et arrête le boss.","blocks":["si <(VieBoss) <= (0)> alors","diffuser [Victoire v]","stop [ce script v]"],"explanation":"Le boss ne continue pas après sa défaite."},{"instruction":"Ajoute une deuxième phase visuelle.","blocks":["si <(VieBoss) < (50)> alors","changer l'effet [couleur v] par (25)"],"explanation":"Le joueur voit que le combat a changé."},{"instruction":"Teste attaques, dégâts et défaite.","blocks":["ajouter (-10) à [VieBoss v]","si <(VieBoss) <= (0)> alors"],"explanation":"Le combat possède maintenant un cycle complet."}]},{"title":"Sauvegarde","steps":[{"instruction":"Choisis les données que le projet doit conserver.","blocks":["mettre [Score v] à (0)","mettre [Niveau v] à (1)"],"explanation":"Tu sais quelles valeurs doivent être sauvegardées."},{"instruction":"Utilise les variables persistantes de Scratch pour conserver les valeurs du projet.","blocks":["variable [Score]","variable [Niveau]"],"explanation":"Les variables peuvent garder l'état du projet selon le mode de partage utilisé."},{"instruction":"Prépare une routine de restauration au lancement.","blocks":["quand drapeau vert cliqué","mettre [Score v] à (Score sauvegardé)"],"explanation":"Le projet peut repartir avec les données disponibles."},{"instruction":"Sauvegarde après une progression importante.","blocks":["si <(Score) > (Score sauvegardé)> alors","mettre [Score sauvegardé v] à (Score)"],"explanation":"La meilleure progression est enregistrée."},{"instruction":"Sauvegarde aussi le niveau.","blocks":["mettre [Niveau sauvegardé v] à (Niveau)"],"explanation":"Plus d'une donnée peut être conservée."},{"instruction":"Teste arrêt puis relance du projet.","blocks":["mettre [Score sauvegardé v] à (Score)","mettre [Niveau sauvegardé v] à (Niveau)"],"explanation":"Tu vérifies que l'état souhaité est retrouvé."},{"instruction":"Explique au joueur quand les données sont enregistrées.","blocks":["dire [Progression enregistrée] pendant (2) secondes"],"explanation":"Le joueur comprend que son progrès a été conservé."}]},{"title":"Menus","steps":[{"instruction":"Crée un message pour ouvrir le menu.","blocks":["quand drapeau vert cliqué","diffuser [Menu v]"],"explanation":"Le menu devient le premier état du projet."},{"instruction":"Affiche les boutons ou choix du menu.","blocks":["quand je reçois [Menu v]","montrer"],"explanation":"Les éléments du menu deviennent visibles."},{"instruction":"Ajoute un choix Jouer.","blocks":["quand ce sprite est cliqué","diffuser [Jouer v]"],"explanation":"Un bouton peut lancer la partie."},{"instruction":"Cache le menu quand le jeu démarre.","blocks":["quand je reçois [Jouer v]","cacher"],"explanation":"Les boutons ne gênent plus le jeu."},{"instruction":"Ajoute un bouton Aide.","blocks":["quand ce sprite est cliqué","diffuser [Aide v]"],"explanation":"Le joueur peut consulter les instructions."},{"instruction":"Affiche puis ferme l'aide.","blocks":["quand je reçois [Aide v]","dire [Instructions] pendant (3) secondes","diffuser [Menu v]"],"explanation":"Le joueur revient au menu après l'aide."},{"instruction":"Ajoute un bouton Rejouer ou Retour.","blocks":["quand ce sprite est cliqué","diffuser [Menu v]"],"explanation":"Le projet possède une navigation entre ses écrans."},{"instruction":"Teste chaque transition.","blocks":["diffuser [Menu v]","diffuser [Jouer v]","diffuser [Aide v]"],"explanation":"Les différents états du jeu communiquent correctement."}]},{"title":"Monde 1","steps":[{"instruction":"Définis l'objectif et initialise le monde.","blocks":["quand drapeau vert cliqué","mettre [Niveau v] à (1)","diffuser [Monde 1 v]"],"explanation":"Le joueur entre dans le premier monde."},{"instruction":"Place le joueur et les éléments de départ.","blocks":["quand je reçois [Monde 1 v]","aller à x: (0) y: (0)"],"explanation":"Le monde commence dans une position connue."},{"instruction":"Ajoute les déplacements et un obstacle.","blocks":["quand [flèche droite v] est pressée","ajouter (6) à x","si <touche [Obstacle v] ?> alors"],"explanation":"Le monde devient interactif."},{"instruction":"Ajoute une petite récompense.","blocks":["si <touche [Objet v] ?> alors","ajouter (1) à [Score v]"],"explanation":"Le joueur a une raison d'explorer."},{"instruction":"Crée une condition de sortie.","blocks":["si <touche [Sortie v] ?> alors"],"explanation":"Le monde sait quand le joueur a terminé."},{"instruction":"Passe au monde suivant.","blocks":["si <touche [Sortie v] ?> alors","ajouter (1) à [Niveau v]","diffuser [Monde 2 v]"],"explanation":"La progression continue vers une nouvelle zone."},{"instruction":"Ajoute un retour visuel de réussite.","blocks":["dire [Monde 1 terminé !] pendant (2) secondes"],"explanation":"Le joueur comprend que le niveau est fini."},{"instruction":"Teste le monde du début à la sortie.","blocks":["touche [Sortie v] ?","diffuser [Monde 2 v]"],"explanation":"Le premier monde possède une boucle de jeu complète."}]},{"title":"Monde 2","steps":[{"instruction":"Crée le nouvel état du monde.","blocks":["quand je reçois [Monde 2 v]","changer l'arrière-plan en [Monde 2 v]"],"explanation":"La scène change lorsque le joueur avance."},{"instruction":"Replace le joueur à l'entrée.","blocks":["aller à x: (-200) y: (0)"],"explanation":"Le joueur commence au bon endroit dans le nouveau monde."},{"instruction":"Ajoute de nouveaux obstacles ou ennemis.","blocks":["créer un clone de [Obstacle v]","créer un clone de [Ennemi v]"],"explanation":"Le deuxième monde introduit de nouveaux défis."},{"instruction":"Augmente la difficulté.","blocks":["ajouter (2) à [vitesse v]","ajouter (1) à [dégâts v]"],"explanation":"Le monde 2 est plus exigeant."},{"instruction":"Ajoute un nouvel objet ou une nouvelle mécanique.","blocks":["si <touche [Objet2 v] ?> alors","ajouter (1) à [Score v]"],"explanation":"Le joueur rencontre quelque chose de nouveau."},{"instruction":"Crée une nouvelle sortie.","blocks":["si <touche [Sortie2 v] ?> alors"],"explanation":"Le deuxième monde possède son propre objectif."},{"instruction":"Prépare la suite ou la victoire finale.","blocks":["si <touche [Sortie2 v] ?> alors","diffuser [Boss v]"],"explanation":"Le monde 2 peut mener au combat final."},{"instruction":"Ajoute un message de transition.","blocks":["dire [Prépare-toi pour le boss !] pendant (2) secondes"],"explanation":"Le joueur comprend le changement de phase."},{"instruction":"Teste toutes les nouvelles mécaniques.","blocks":["touche [Ennemi v] ?","touche [Objet2 v] ?","touche [Sortie2 v] ?"],"explanation":"Le deuxième monde fonctionne comme un vrai niveau."}]},{"title":"Personnages et pouvoirs","steps":[{"instruction":"Crée le personnage principal et son pouvoir.","blocks":["nouvelle variable [Pouvoir]","mettre [Pouvoir v] à [aucun]"],"explanation":"Le jeu sait quel pouvoir est actuellement équipé."},{"instruction":"Ramasse un objet qui débloque le pouvoir.","blocks":["si <touche [PowerUp v] ?> alors","mettre [Pouvoir v] à [double saut]"],"explanation":"Le joueur obtient une nouvelle capacité."},{"instruction":"Fais disparaître le PowerUp après collecte.","blocks":["si <touche [PowerUp v] ?> alors","cacher"],"explanation":"Le bonus ne peut pas être récupéré plusieurs fois."},{"instruction":"Utilise le pouvoir avec une touche.","blocks":["quand [espace v] est pressée","si <(Pouvoir) = [double saut]> alors","ajouter (15) à [VitesseY v]"],"explanation":"Le pouvoir modifie réellement le contrôle."},{"instruction":"Ajoute un deuxième pouvoir avec une autre condition.","blocks":["si <(Pouvoir) = [bouclier]> alors","dire [Bouclier actif] pendant (1) secondes"],"explanation":"Le système peut gérer plusieurs capacités."},{"instruction":"Fais apparaître les bons pouvoirs selon le niveau.","blocks":["si <(Niveau) = (2)> alors","montrer"],"explanation":"Les pouvoirs peuvent être débloqués progressivement."},{"instruction":"Ajoute un retour visuel ou sonore.","blocks":["jouer le son [powerup v]","changer l'effet [luminosité v] par (25)"],"explanation":"Le joueur remarque immédiatement l'activation."},{"instruction":"Teste chaque pouvoir puis son absence.","blocks":["mettre [Pouvoir v] à [aucun]","mettre [Pouvoir v] à [double saut]"],"explanation":"Les pouvoirs ne se déclenchent que lorsqu'ils sont disponibles."}]},{"title":"Ennemis, boss et jeu complet","steps":[{"instruction":"Réunis les systèmes de base : démarrage, joueur et variables.","blocks":["quand drapeau vert cliqué","mettre [Score v] à (0)","mettre [Vies v] à (3)","mettre [Niveau v] à (1)"],"explanation":"La partie commence avec toutes ses données principales."},{"instruction":"Ajoute le déplacement et les collisions du joueur.","blocks":["quand [flèche droite v] est pressée","ajouter (6) à x","si <touche [Obstacle v] ?> alors"],"explanation":"Le joueur peut parcourir le monde tout en rencontrant des dangers."},{"instruction":"Ajoute les ennemis et leur comportement.","blocks":["créer un clone de [Ennemi v]","quand je commence comme un clone","pour toujours","avancer de (4) pas"],"explanation":"Les adversaires fonctionnent pendant la partie."},{"instruction":"Ajoute les dégâts et les vies.","blocks":["si <touche [Ennemi v] ?> alors","ajouter (-1) à [Vies v]","aller à x: (0) y: (0)"],"explanation":"Les collisions avec les ennemis ont une conséquence."},{"instruction":"Ajoute le score et les récompenses.","blocks":["si <touche [Objet v] ?> alors","ajouter (1) à [Score v]","cacher"],"explanation":"Le joueur peut progresser grâce aux objets."},{"instruction":"Ajoute le passage de niveau.","blocks":["si <(Score) >= (10)> alors","ajouter (1) à [Niveau v]","diffuser [Nouveau niveau v]"],"explanation":"La partie peut évoluer au lieu de rester sur un seul niveau."},{"instruction":"Ajoute la condition Game Over.","blocks":["si <(Vies) = (0)> alors","diffuser [Game Over v]"],"explanation":"La partie se termine lorsque les chances sont épuisées."},{"instruction":"Ajoute le boss final.","blocks":["quand je reçois [Boss v]","mettre [VieBoss v] à (100)","diffuser [Combat boss v]"],"explanation":"Le dernier combat devient une phase distincte."},{"instruction":"Fais fonctionner les attaques du boss.","blocks":["quand je reçois [Combat boss v]","pour toujours","si <touche [Attaque v] ?> alors","ajouter (-10) à [VieBoss v]"],"explanation":"Le joueur peut réduire la vie du boss."},{"instruction":"Crée la victoire finale.","blocks":["si <(VieBoss) <= (0)> alors","diffuser [Victoire v]"],"explanation":"Le jeu possède une condition de victoire complète."},{"instruction":"Ajoute l'écran final et le score.","blocks":["quand je reçois [Victoire v]","dire [Victoire !] pendant (3) secondes","dire (Score)"],"explanation":"Le joueur voit le résultat de toute la partie."},{"instruction":"Teste la partie du début jusqu'à la victoire ou Game Over.","blocks":["diffuser [Menu v]","diffuser [Nouveau niveau v]","diffuser [Boss v]","diffuser [Victoire v]"],"explanation":"Tous les systèmes doivent fonctionner ensemble sans étape de remplissage."}]}];
+const lessons=testLessonData.map((l,i)=>({
+  title:l.title,
+  desc:l.objective || "Apprends cette compétence avec des étapes progressives.",
+  cat:l.cat,
+  emoji:(icons[i]||"🧩"),
+  objective:l.objective,
+  steps:(l.steps||[]).map(x=>typeof x==="string"
+    ? {instruction:x,blocks:[]}
+    : {instruction:x.instruction||"",blocks:Array.isArray(x.blocks)?x.blocks:[]}),
+  blocks:l.blocks||[],
+  challenge:l.challenge||"Construis cette partie dans Scratch puis teste-la."
+}));
+let filter="Tous",done=JSON.parse(localStorage.getItem("saDone")||"[]"),xp=Number(localStorage.getItem("saXP")||0);
+
+function setFilter(f,b){filter=f;document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()}
+function render(){let q=document.getElementById("q").value.toLowerCase(),c=document.getElementById("cards");c.innerHTML="";names.forEach((n,i)=>{if(filter!="Tous"&&cats[i]!=filter)return;if(q&&!n.toLowerCase().includes(q))return;c.innerHTML+=`<div class="card" onclick="openLesson(${i})"><span class="tag">${cats[i]}</span><div class="emoji">${icons[i]}</div><h3>${i+1}. ${n} ${done.includes(i)?"✅":""}</h3><p>${desc[i]}</p><small>${done.includes(i)?"Terminée":"Clique pour apprendre →"}</small></div>`});update()}
+function openLesson(i){
+  current = i;
+  const l = lessons[i];
+  const panel = document.getElementById('lesson');
+  const homePanel = document.getElementById('home');
+  if(!panel || !homePanel) return;
+
+  homePanel.style.display = 'none';
+  panel.style.display = 'block';
+  panel.classList.add('show');
+
+  const steps = (l && Array.isArray(l.steps) && l.steps.length)
+    ? l.steps
+    : [
+      "Objectif : comprendre cette mécanique Scratch.",
+      "Ouvre Scratch et prépare ton projet.",
+      "Ajoute les blocs indiqués et assemble-les dans l'ordre.",
+      "Teste avec le drapeau vert et corrige les erreurs.",
+      "Améliore ton projet avec le défi.",
+      "Prends une capture d'écran de ton résultat."
+    ];
+
+  let saved = parseInt(localStorage.getItem('scratchProgress_' + i) || '0', 10);
+  if(isNaN(saved) || saved < 0) saved = 0;
+  if(saved >= steps.length) saved = steps.length - 1;
+
+  panel.innerHTML = `
+    <button class="back" onclick="home()">← Retour aux leçons</button>
+    <div class="lesson-top">
+      <div>
+        <div class="kicker">LEÇON ${i+1} / ${lessons.length}</div>
+        <h1>${escapeHtml(l.title || names[i] || 'Leçon')}</h1>
+        <p class="lead">${escapeHtml(l.objective || l.desc || '')}</p>
+      </div>
+      <div class="lesson-badge">${escapeHtml(l.emoji || '🎮')}</div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="lessonProgressText"></span>
+        <span id="lessonProgressPercent"></span>
+      </div>
+      <div class="progress-bar"><div id="lessonProgressFill"></div></div>
+    </div>
+
+    <div class="real-lesson">
+      <div class="step-card">
+        <div class="step-number" id="stepNumber"></div>
+        <h2 id="stepTitle"></h2>
+        <div id="stepText"></div>
+        <button class="continue" id="stepButton"></button>
+      </div>
+
+      <div class="lesson-info">
+        <div class="blocks-section">
+          <h3>🧩 Blocs Scratch à utiliser</h3>
+          <div id="lessonBlocks"></div>
+        </div>
+
+        <div class="challenge">
+          <h3>🎯 Défi</h3>
+          <p id="lessonChallenge"></p>
+        </div>
+
+        <div class="checkpoint">
+          <h3>📸 Vérification</h3>
+          <p>Quand tu as terminé la leçon, dépose une capture d'écran de ton projet Scratch.</p>
+          <div class="dropzone" id="dropzone">
+            <strong>Dépose ta capture ici</strong>
+            <span>ou clique pour choisir une image</span>
+            <input id="shotInput" type="file" accept="image/*" style="display:none">
+          </div>
+          <div id="shotPreview"></div>
+          <button class="continue" id="finishButton" disabled>
+            ✓ Terminer la leçon →
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  window.activeLessonSteps = steps;
+  window.activeLessonStep = saved;
+  window.activeLessonIndex = i;
+
+  renderProgressiveStep();
+  setupDropzone(i);
+
+  const oldShot = localStorage.getItem('scratchShot_' + i);
+  if(oldShot) showPreview(oldShot);
+
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+
+function guideClass(block){
+  const s = String(block).toLowerCase();
+  if (s.includes("quand") || s.includes("touche") || s.includes("reçois") || s.includes("drapeau")) return "guide-event";
+  if (s.includes("avancer") || s.includes("aller à") || s.includes("ajouter") && (s.includes("x") || s.includes("y")) || s.includes("tourner") || s.includes("s'orienter")) return "guide-motion";
+  if (s.includes("dire") || s.includes("costume") || s.includes("arrière-plan") || s.includes("montrer") || s.includes("cacher") || s.includes("effet")) return "guide-looks";
+  if (s.includes("son")) return "guide-sound";
+  if (s.includes("si ") || s.includes("sinon") || s.includes("répéter") || s.includes("pour toujours") || s.includes("attendre") || s.includes("arrêter")) return "guide-control";
+  if (s.includes("touche [") || s.includes("souris") || s.includes("contient")) return "guide-sensing";
+  if (s.includes("mettre [") || s.includes("changer [") || s.includes("ajouter [") || s.includes("supprimer") || s.includes("liste") || s.includes("xp") || s.includes("niveau") || s.includes("score") || s.includes("vies") || s.includes("pièces") || s.includes("pv")) return "guide-variable";
+  return "guide-other";
+}
+
+function explainScratchBlock(text){
+  const s = String(text).toLowerCase();
+  if(s.includes("quand drapeau vert cliqué")) return "Démarre ce script quand tu cliques sur le drapeau vert.";
+  if(s.includes("quand touche")) return "Démarre ce script quand la touche indiquée est pressée.";
+  if(s.includes("quand je reçois")) return "Démarre ce script quand le message indiqué est reçu.";
+  if(s.includes("quand ce sprite est cliqué")) return "Démarre ce script quand on clique sur ce sprite.";
+  if(s.includes("avancer")) return "Fait avancer le sprite du nombre de pas indiqué.";
+  if(s.includes("aller à")) return "Place le sprite directement aux coordonnées X et Y indiquées.";
+  if(s.includes("ajouter") && s.includes("x")) return "Change la position horizontale du sprite. Une valeur positive va vers la droite, une valeur négative vers la gauche.";
+  if(s.includes("ajouter") && s.includes("y")) return "Change la position verticale du sprite. Une valeur positive monte, une valeur négative descend.";
+  if(s.includes("tourner")) return "Fait tourner le sprite du nombre de degrés indiqué.";
+  if(s.includes("s'orienter vers")) return "Fait tourner le sprite pour qu'il regarde vers le sprite ou la direction choisie.";
+  if(s.includes("dire")) return "Affiche une bulle de dialogue avec le texte indiqué pendant le temps choisi.";
+  if(s.includes("costume suivant")) return "Passe au costume suivant du sprite. C'est utile pour créer une animation.";
+  if(s.includes("changer costume")) return "Change l'apparence du sprite pour le costume choisi.";
+  if(s.includes("basculer sur l'arrière-plan")) return "Change le décor de la scène pour l'arrière-plan choisi.";
+  if(s.includes("montrer")) return "Rend le sprite visible.";
+  if(s.includes("cacher")) return "Rend le sprite invisible.";
+  if(s.includes("effet")) return "Modifie l'apparence du sprite avec un effet graphique.";
+  if(s.includes("jouer le son")) return "Joue le son choisi. Avec « jusqu'au bout », le script attend la fin du son.";
+  if(s.includes("arrêter tous les sons")) return "Arrête tous les sons qui sont en train de jouer.";
+  if(s.includes("attendre")) return "Met le script en pause pendant la durée indiquée.";
+  if(s.includes("répéter jusqu'à")) return "Répète les blocs à l'intérieur jusqu'à ce que la condition soit vraie.";
+  if(s.includes("répéter")) return "Répète les blocs placés à l'intérieur le nombre de fois indiqué.";
+  if(s.includes("pour toujours")) return "Répète les blocs à l'intérieur sans s'arrêter jusqu'à ce que le script soit arrêté.";
+  if(s.includes("si") && s.includes("sinon")) return "Choisit entre deux actions : la partie « si » quand la condition est vraie, ou « sinon » quand elle est fausse.";
+  if(s.includes("si ")) return "Vérifie une condition. Les blocs à l'intérieur sont exécutés seulement si la condition est vraie.";
+  if(s.includes("attendre jusqu'à")) return "Attend sans continuer tant que la condition n'est pas vraie.";
+  if(s.includes("touche [")) return "Vérifie si le sprite touche l'objet ou la couleur indiquée.";
+  if(s.includes("souris pressée")) return "Vérifie si le bouton de la souris est actuellement enfoncé.";
+  if(s.includes("envoyer à tous")) return "Envoie un message aux autres scripts pour déclencher une nouvelle action.";
+  if(s.includes("mettre [")) return "Donne une valeur précise à la variable choisie.";
+  if(s.includes("changer [")) return "Augmente ou diminue la valeur de la variable choisie.";
+  if(s.includes("ajouter [")) return "Ajoute un élément dans la liste choisie.";
+  if(s.includes("supprimer tout")) return "Vide complètement la liste choisie.";
+  if(s.includes("supprimer") && s.includes("liste")) return "Retire l'élément indiqué de la liste.";
+  if(s.includes("créer un clone")) return "Crée une copie du sprite pour avoir plusieurs objets identiques.";
+  if(s.includes("commence comme un clone")) return "Définit ce que fait chaque clone juste après sa création.";
+  if(s.includes("supprimer ce clone")) return "Supprime le clone actuel de la scène.";
+  if(s.includes("s'orienter")) return "Change la direction dans laquelle le sprite regarde.";
+  if(s.includes("arrêter ce script")) return "Arrête uniquement le script actuel.";
+  if(s.includes("arrêter tous les scripts")) return "Arrête les scripts en cours pour mettre fin au programme.";
+  return "Exécute l'action indiquée par ce bloc dans Scratch.";
+}
+
+function scratchCategory(block){
+  const b=(block||"").toLowerCase();
+  if(b.includes("quand ") || b.includes("diffuser") || b.includes("quand je reçois")) return "events";
+  if(b.includes("dire") || b.includes("costume") || b.includes("montrer") || b.includes("cacher")) return "looks";
+  if(b.includes("son") || b.includes("jouer le son")) return "sound";
+  if(b.includes("avancer") || b.includes("changer x") || b.includes("changer y") || b.includes("aller à") || b.includes("tourner") || b.includes("s'orienter") || b.includes("rebondir")) return "motion";
+  if(b.includes("répéter") || b.includes("pour toujours") || b.includes("si ") || b.includes("attendre") || b.includes("arrêter") || b.includes("clone")) return "control";
+  if(b.includes("score") || b.includes("vies") || b.includes("temps") || b.includes("niveau") || b.includes("xp") || b.includes("pièces") || b.includes("inventaire") || b.includes("mettre") || b.includes("ajouter")) return "variables";
+  return "sensing";
+}
+
+function scratchBlock(block){
+  const cat=scratchCategory(block);
+  return `<div class="scratch-block ${cat}">
+    <span class="block-notch"></span>
+    <span class="block-text">${escapeHtml(block)}</span>
+    <span class="block-tab"></span>
+  </div>`;
+}
+
+function blockGuide(i,step){
+  const l=lessons[i]||{};
+  const raw=l.steps?.[step]||{};
+  const s=typeof raw==="string"?{instruction:raw,blocks:[]}:raw;
+  const total=(l.steps||[]).length||1;
+  const bs=Array.isArray(s.blocks)?s.blocks:[];
+  return `<div class="real-step-guide">
+    <div class="step-head">🧩 Étape ${step+1} sur ${total}</div>
+    <div class="instruction"><b>À faire :</b> ${escapeHtml(s.instruction||"")}</div>
+    ${bs.length ? `
+      <div class="block-title">🧱 Bloc(s) à utiliser dans Scratch</div>
+      <div class="scratch-block-stack">${bs.map(scratchBlock).join("")}</div>
+      <div class="block-hint">➡️ Cherche exactement ce bloc dans la catégorie correspondante de Scratch, puis place-le dans ton script.</div>
+    ` : `
+      <div class="block-hint">ℹ️ Cette étape prépare ou teste ton projet. Utilise les blocs déjà placés aux étapes précédentes.</div>
+    `}
+    <div class="verify">✅ <b>Teste :</b> ${step===total-1 ? "vérifie que l'objectif de la leçon fonctionne." : "fais cette étape dans Scratch, teste le résultat, puis passe à l'étape suivante."}</div>
+  </div>`;
+}
+
+function renderProgressiveStep(){
+  const i = window.activeLessonIndex;
+  const steps = window.activeLessonSteps || [];
+  const rawStep = steps[window.activeLessonStep] || {};
+  const stepObj = typeof rawStep === "string" ? {instruction:rawStep,blocks:[]} : rawStep;
+  const s = String(stepObj.instruction || '');
+  const total = Math.max(1, steps.length);
+  const n = window.activeLessonStep + 1;
+  const pct = Math.round(n / total * 100);
+
+  let title = 'Étape ' + n;
+  let body = s;
+  if(s.includes(' — ')){
+    title = s.split(' — ')[0];
+    body = s.substring(s.indexOf(' — ') + 3);
+  } else if(s.includes(': ')){
+    title = s.split(': ')[0];
+    body = s.substring(s.indexOf(': ') + 2);
+  }
+
+  document.getElementById('stepNumber').textContent = 'ÉTAPE ' + n;
+  document.getElementById('stepTitle').textContent = title;
+  document.getElementById('stepText').innerHTML = '<p>' + escapeHtml(body) + '</p>' + blockGuide(i, window.activeLessonStep);
+  document.getElementById('lessonProgressText').textContent = 'Étape ' + n + ' sur ' + total;
+  document.getElementById('lessonProgressPercent').textContent = pct + '%';
+  document.getElementById('lessonProgressFill').style.width = pct + '%';
+
+  const l = lessons[i] || {};
+  const blockList = Array.isArray(l.blocks) && l.blocks.length ? l.blocks : [];
+  document.getElementById('lessonBlocks').innerHTML =
+    blockList.map(b => scratchBlock(String(b))).join('');
+
+  document.getElementById('lessonChallenge').textContent =
+    l.challenge || 'Refais cette activité sans copier, puis ajoute une petite amélioration.';
+
+  const btn = document.getElementById('stepButton');
+  if(window.activeLessonStep < total - 1){
+    btn.textContent = 'J’ai fait cette étape →';
+    btn.onclick = function(){
+      window.activeLessonStep++;
+      localStorage.setItem('scratchProgress_' + i, window.activeLessonStep);
+      renderProgressiveStep();
+    };
+  }else{
+    btn.textContent = 'J’ai terminé les étapes ✓';
+    btn.onclick = function(){
+      document.getElementById('dropzone').scrollIntoView({behavior:'smooth', block:'center'});
+    };
+  }
+}
+
+function setupDropzone(i){
+  const zone = document.getElementById('dropzone');
+  const input = document.getElementById('shotInput');
+  if(!zone || !input) return;
+
+  zone.onclick = () => input.click();
+  input.onchange = e => {
+    if(e.target.files && e.target.files[0]) handleShot(e.target.files[0], i);
+  };
+  zone.ondragover = e => {
+    e.preventDefault();
+    zone.classList.add('drag');
+  };
+  zone.ondragleave = () => zone.classList.remove('drag');
+  zone.ondrop = e => {
+    e.preventDefault();
+    zone.classList.remove('drag');
+    if(e.dataTransfer.files && e.dataTransfer.files[0]) handleShot(e.dataTransfer.files[0], i);
+  };
+
+  const finish = document.getElementById('finishButton');
+  finish.onclick = () => {
+    if(localStorage.getItem('scratchShot_' + i)){
+      complete(i);
+    }
+  };
+}
+
+function handleShot(file, i){
+  if(!file || !file.type || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    localStorage.setItem('scratchShot_' + i, e.target.result);
+    showPreview(e.target.result);
+    const finish = document.getElementById('finishButton');
+    if(finish){
+      finish.disabled = false;
+      finish.classList.add('ready');
+    }
+    if(typeof analyze === 'function'){
+      try { analyze(i, e.target.result); } catch(err) {}
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function showPreview(src){
+  const box = document.getElementById('shotPreview');
+  const finish = document.getElementById('finishButton');
+  if(box) box.innerHTML = '<img class="preview" src="' + src + '" alt="Capture Scratch">';
+  if(finish){
+    finish.disabled = false;
+    finish.classList.add('ready');
+  }
+}
+
+function formatBlocks(text){
+  return String(text).split('\n').map((x,i)=>x.trim()?`<div class="fake-block"><span>${i+1}</span>${escapeHtml(x)}</div>`:'').join('');
+}
+function setupDropzone(i){
+ const d=document.getElementById('drop'),inp=document.getElementById('shot'); if(!d||!inp)return;
+ d.addEventListener('click',e=>{if(e.target!==inp)inp.click()});
+ ['dragenter','dragover'].forEach(x=>d.addEventListener(x,e=>{e.preventDefault();d.classList.add('drag')}));
+ ['dragleave','drop'].forEach(x=>d.addEventListener(x,e=>{e.preventDefault();d.classList.remove('drag')}));
+ d.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)handleShot(f,i)});
+ inp.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)handleShot(f,i)});
+}
+function handleShot(file,i){
+ if(!file.type.startsWith('image/')){document.getElementById('status').textContent='Choisis une image PNG ou JPG.';return;}
+ const r=new FileReader();
+ r.onload=()=>{localStorage.setItem('scratchShot_'+i,r.result);showPreview(r.result);document.getElementById('status').textContent='✓ Capture reçue. Tu peux continuer.';document.getElementById('continueBtn').disabled=false;if(typeof analyze==='function')analyze(i,r.result);};
+ r.readAsDataURL(file);
+}
+function showPreview(src){const p=document.getElementById('preview');if(p){p.src=src;p.style.display='block';}}
+
+function processFile(file,i){if(!file||!file.type.startsWith("image/")){alert("Choisis une image.");return}const r=new FileReader();r.onload=async()=>{document.getElementById("preview").innerHTML=`<img class="previewImg" src="${r.result}">`;document.getElementById("aiStatus").textContent="🤖 Vérification de la capture...";localStorage.setItem("scratchShot_"+i,r.result);await analyze(r.result,i)};r.readAsDataURL(file)}
+function previewShot(e,i){processFile(e.target.files[0],i)}
+function dropShot(e,i){e.preventDefault();e.currentTarget.classList.remove("drag");processFile(e.dataTransfer.files[0],i)}
+async function analyze(dataUrl,i){
+ const status=document.getElementById("aiStatus"),box=document.getElementById("aiFeedback");await new Promise(r=>setTimeout(r,700));
+ const key=localStorage.getItem("scratchAIKey")||"";
+ if(!key){status.innerHTML='<span class="ok">✅ Capture reçue !</span>';box.innerHTML='';document.getElementById("continueBtn").disabled=false;return}
+ try{
+  const prompt=`Tu es un professeur Scratch. Leçon: ${names[i]}. Défi: ${desc[i]}. Analyse cette capture des blocs Scratch. Réponds en français avec: CORRECT ou À CORRIGER, puis une explication courte et une correction si nécessaire.`;
+  const r=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},body:JSON.stringify({model:"gpt-4o-mini",messages:[{role:"user",content:[{type:"text",text:prompt},{type:"image_url",image_url:{url:dataUrl}}]}],max_tokens:400})});
+  if(!r.ok)throw Error("API");
+  const j=await r.json(),t=j.choices?.[0]?.message?.content||"Analyse terminée.";
+  status.innerHTML='<span class="ok">🤖 Analyse IA terminée</span>';box.innerHTML='';document.getElementById("continueBtn").disabled=false;
+ }catch(e){status.innerHTML='<span class="warn">⚠️ IA en ligne indisponible</span>';box.innerHTML='';document.getElementById("continueBtn").disabled=false}
+}
+function escapeHtml(s){s=String(s??"");return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function complete(i){
+  if(!localStorage.getItem('scratchShot_' + i)){
+    alert('📸 Dépose une capture avant de continuer.');
+    return;
+  }
+
+  if(!done.includes(i)){
+    done.push(i);
+    xp += 25;
+    save();
+  }
+
+  update();
+
+  if(i < lessons.length - 1){
+    openLesson(i + 1);
+  }else{
+    home();
+    alert('🎉 Bravo ! Tu as terminé toutes les leçons !');
+  }
+}
+
+function aiSettings(){const old=localStorage.getItem("scratchAIKey")||"";const key=prompt("Clé API compatible OpenAI (stockée seulement dans ce navigateur).",old);if(key!==null){localStorage.setItem("scratchAIKey",key.trim());alert("🤖 IA configurée !")}}
+function save(){localStorage.setItem("saDone",JSON.stringify(done));localStorage.setItem("saXP",xp)}
+function update(){let p=Math.round(done.length/names.length*100);document.getElementById("prog").textContent=done.length+" / "+names.length;document.getElementById("xp").textContent=xp;document.getElementById("bar").style.width=p+"%";document.getElementById("percent").textContent=p+" % terminé"}
+function home(){document.getElementById("lesson").classList.remove("show");document.getElementById("home").style.display="block";render()}
+function resetAll(){if(confirm("Réinitialiser toute la progression et les captures ?")){done=[];xp=0;names.forEach((_,i)=>localStorage.removeItem("scratchShot_"+i));save();render()}}
+function toggleDark(){document.body.classList.toggle("dark")}
+render();
+
+const realLessonSteps=["Repère la scène, les sprites et les catégories de blocs. Clique sur Mouvement, Apparence, Sons et Événements.", "Choisis un sprite puis un arrière-plan. Clique sur le sprite pour voir ses scripts.", "Dans Événements, prends « quand drapeau vert cliqué », puis ajoute « avancer de 10 pas » dans Mouvement. Teste.", "Utilise un événement de touche, puis ajoute une direction et « avancer de 10 pas ». Teste plusieurs fois.", "Choisis un son dans l’onglet Sons puis programme « jouer le son jusqu’au bout » sous un événement.", "Dans Apparence, utilise « dire [ ] pendant [ ] secondes ». Ajoute plusieurs dialogues.", "Ajoute plusieurs costumes puis utilise « costume suivant » avec une petite attente pour créer une animation.", "Compare les événements drapeau vert, touche pressée et message reçu. Crée deux scripts différents.", "Prends « si alors », mets une condition dedans et place une action à l’intérieur.", "Prends « si alors sinon » et programme une action dans chaque branche.", "Mets une action dans « répéter 10 fois ». Change le nombre et observe.", "Mets une action dans « pour toujours » et regarde ce qui se répète.", "Dans une boucle, teste « touche [ ] pressée ? » avec un bloc si pour contrôler le personnage.", "Dans Capteurs, utilise « touche [sprite] ? » pour déclencher une réaction lors d’un contact.", "Utilise >, < ou = pour comparer des valeurs dans une condition.", "Crée Score, mets-le à 0 au départ, puis ajoute des points quand le joueur réussit.", "Crée Vies, donne une valeur de départ, enlève 1 lors d’un danger et termine à 0.", "Crée Temps, attends une seconde puis enlève 1 dans une boucle jusqu’à 0.", "Crée un décor Menu et un bouton Jouer. Le bouton envoie START et les sprites commencent avec START.", "Choisis une condition de défaite, puis affiche un écran ou message Game Over.", "Crée un joueur, un sol et une vitesse verticale. Utilise gravité et saut pour créer une plateforme.", "Dessine des murs et une sortie. Détecte les murs et replace le joueur lorsqu’il les touche.", "Crée un objet à ramasser. Lorsqu’il touche le joueur, ajoute des points puis cache-le.", "Crée une liste Inventaire et utilise « ajouter [objet] à [liste] » pour stocker plusieurs objets.", "Utilise des clones pour créer plusieurs objets. Programme « quand je commence comme un clone ».", "Fais regarder un ennemi vers le joueur puis avancer de quelques pas dans une boucle.", "Combine collecte et liste pour créer un inventaire utilisable.", "Crée Pièces et un prix. Vérifie que le joueur possède assez de pièces avant l’achat.", "Crée XP et Niveau. Ajoute de l’XP puis augmente le niveau quand le seuil est atteint.", "Crée VieBoss. Une attaque enlève des points et 0 vie déclenche la victoire.", "Crée une variable Niveau et teste comment ton projet gère la progression.", "Crée plusieurs écrans avec des décors et des messages pour naviguer entre les menus.", "Définis l’objectif, construis le joueur, les contrôles, le niveau, les obstacles et la victoire.", "Crée un deuxième décor et de nouveaux obstacles. Utilise Niveau ou un message pour charger le monde.", "Choisis une capacité spéciale et programme une touche pour l’activer.", "Crée deux ennemis avec des comportements différents.", "Combine vie, déplacement, attaque et détection pour construire un boss.", "Vérifie costumes, tailles, textes, sons et décors pour rendre le jeu plus clair.", "Teste victoire, défaite et actions inhabituelles. Note puis corrige les bugs.", "Combine menu, contrôles, objectif, obstacles, score, victoire et défaite dans un jeu complet."];
+const realLessonNames=["Découvrir Scratch", "Sprites et décors", "Premier programme", "Mouvement", "Sons", "Dialogue", "Costumes", "Événements", "Si", "Si sinon", "Répéter", "Pour toujours", "Clavier", "Collision", "Opérateurs", "Variables", "Vies", "Timer", "Écran de démarrage", "Game Over", "Plateforme", "Labyrinthe", "Collecte", "Listes", "Clones", "IA simple", "Inventaire", "Boutique", "XP et niveaux", "Boss", "Progression", "Menus", "Projet", "Monde 2", "Pouvoirs", "Ennemis", "Boss final", "Polissage", "Test", "Jeu complet"];
+lessons.forEach((l,i)=>{if(realLessonSteps[i]){l.content=`<h3>🎯 Objectif</h3><p>${escapeHtml(l.desc)}</p><h3>👣 Étapes à suivre</h3><p>${realLessonSteps[i]}</p><h3>🧠 Pourquoi ?</h3><p>Chaque bloc a un rôle précis. L’événement démarre le script, les blocs de contrôle organisent les actions, et les autres blocs font le travail. Teste après chaque changement pour voir exactement ce qui se passe.</p><h3>🧪 Teste</h3><ol><li>Lance le projet.</li><li>Fais l’action demandée.</li><li>Change une valeur.</li><li>Observe puis corrige si nécessaire.</li></ol>`;l.challenge=`Refais « ${realLessonNames[i]} » dans ton propre projet sans copier exactement l’exemple.`;l.blocks=`Quand drapeau vert cliqué
+→ ${realLessonSteps[i]}
+→ teste le programme`;}});
+
+function renderLesson(lesson){
+  const panel = document.getElementById("lessonPanel") || document.getElementById("lesson");
+  if(!panel) return;
+  const steps = lesson.steps || [];
+  panel.innerHTML = `
+    <div class="lesson-head">
+      <div>
+        <div class="eyebrow">LESSON</div>
+        <h2>${escapeHtml(lesson.title)}</h2>
+        <p>${steps.length} étapes — juste ce qu'il faut pour apprendre cette notion.</p>
+      </div>
+      <div class="lesson-count">${steps.length} étapes</div>
+    </div>
+    <div class="steps">
+      ${steps.map((s,i)=>`
+        <article class="step-card" data-step="${i}">
+          <div class="step-number">${i+1}</div>
+          <div class="step-content">
+            <h3>Étape ${i+1}</h3>
+            <p class="instruction">${escapeHtml(s.instruction)}</p>
+            <div class="block-list">
+              ${(s.blocks||[]).map(b=>`<span class="scratch-block">${escapeHtml(b)}</span>`).join("")}
+            </div>
+            <div class="why"><strong>Pourquoi ?</strong> ${escapeHtml(s.explanation)}</div>
+            <label class="done-line">
+              <input type="checkbox" class="step-check">
+              J’ai fait cette étape dans Scratch
+            </label>
+          </div>
+        </article>
+      `).join("")}
+    </div>
+    <div class="lesson-footer">
+      <button class="primary" id="completeLessonBtn">✓ Terminer la leçon</button>
+      <span class="lesson-note">Les étapes sont plus courtes pour les notions simples et plus nombreuses pour les projets complexes.</span>
+    </div>
+  `;
+  panel.querySelectorAll(".step-check").forEach((box)=>{
+    box.addEventListener("change", ()=>{
+      const card = box.closest(".step-card");
+      if(card) card.classList.toggle("completed", box.checked);
+      updateStepProgress(panel);
+    });
+  });
+  const complete = panel.querySelector("#completeLessonBtn");
+  if(complete){
+    complete.addEventListener("click", ()=>{
+      const checks = [...panel.querySelectorAll(".step-check")];
+      const done = checks.filter(x=>x.checked).length;
+      if(done < checks.length){
+        checks.forEach(x=>{ if(!x.checked) x.closest(".step-card")?.classList.add("needs-attention"); });
+        return;
+      }
+      if(typeof completeLesson === "function") completeLesson();
+      else if(typeof saveProgress === "function") saveProgress();
+    });
+  }
+  updateStepProgress(panel);
+}
+
+function updateStepProgress(panel){
+  const boxes = [...panel.querySelectorAll(".step-check")];
+  const done = boxes.filter(x=>x.checked).length;
+  const pct = boxes.length ? Math.round(done/boxes.length*100) : 0;
+  const bar = panel.querySelector(".step-progress-fill");
+  if(bar) bar.style.width = pct + "%";
+}
+
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[ch]));
+}
+
+</script></body></html>
